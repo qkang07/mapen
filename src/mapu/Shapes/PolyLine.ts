@@ -1,5 +1,4 @@
-import { Shape } from "./Shape";
-import { ShapeType, LngLat, IShapeStyle, IRenderContext, Bounds } from "../Models";
+import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../index.d";
 import { MapElement } from '../MapElement';
 import { makePolyBounds } from '../Utils';
 export class Line extends MapElement {
@@ -7,9 +6,9 @@ export class Line extends MapElement {
     containerPath: LngLat[] = []
     pixelPath: LngLat[] = []
 
-    shape: ShapeType = 'line'
     constructor(path: LngLat[], style?: IShapeStyle) {
         super()
+        this.type = 'line'
         this.path = path
         this.style = Object.assign({}, this.style, style)
         // this.setStyle(style)
@@ -36,6 +35,9 @@ export class Line extends MapElement {
         ctx.stroke()
         return super.render(rctx)
 
+    }
+    contain(pos:LngLat){
+        return false
     }
     protected makeBounds():Bounds{
         return makePolyBounds(this.path)

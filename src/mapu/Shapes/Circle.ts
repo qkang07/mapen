@@ -1,16 +1,15 @@
-import { Shape } from "./Shape";
-import { ShapeType, LngLat, IShapeStyle, IRenderContext, Bounds } from "../Models";
+import { LngLat, IRenderContext, Bounds, IShapeStyle } from "../index.d";
 import { mapDistance } from '../Utils';
 import { MapElement } from '../MapElement';
 
 export class Circle extends MapElement {
     center: LngLat
     radius: number
-    shape: ShapeType = 'circle'
     centerPixel: { x: number, y: number }
     radiusPixel:number
     constructor(center: LngLat, radius: number, style?: IShapeStyle) {
         super()
+        this.type = 'circle'
         this.center = center
         this.radius = radius
         this.style = Object.assign({},this.style, style)

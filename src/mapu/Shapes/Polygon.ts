@@ -1,5 +1,4 @@
-import { Shape } from "./Shape";
-import { ShapeType, LngLat, IShapeStyle, IRenderContext, Bounds } from "../Models";
+import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../index.d";
 import windingLine from '../Utils/windingLine';
 import { MapElement } from '../MapElement';
 import { makePolyBounds } from '../Utils';
@@ -15,12 +14,12 @@ export class Polygon extends MapElement  {
     path: LngLat[] = []
     pixelPath: LngLat[] = []
     h3Index: string = ''
-    shape: ShapeType = 'polygon'
     
     offImgSize: LngLat
 
     constructor(path: LngLat[], style?: IShapeStyle) {
         super()
+        this.type='polygon'
         this.path = path
         this.style = Object.assign({}, this.style, style)
         // this.setStyle(style)

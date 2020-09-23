@@ -1,4 +1,5 @@
-import { Bounds, LngLat } from '../Models';
+import { MapElement } from '../MapElement';
+import { Bounds, LngLat } from '../index.d';
 
 export const mapDistance = (p1:LngLat,p2:LngLat)=>{
     const Pu = 0.017453292519943295
@@ -32,3 +33,8 @@ export function makePolyBounds (path:LngLat[]):Bounds{
   })
   return [min, max]
 }
+
+export function isShape(ele:MapElement){
+  return ele.type =='polygon'|| ele.type == 'circle' || ele.type == 'line' || ele.type == 'marker'
+}
+

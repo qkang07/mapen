@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "start": "umi dev",
-    "build": "umi build",
+    "build": "webpack --config build-script/webpack.config.js",
+    "build-web": "umi build",
     "postinstall": "umi generate tmp",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
     "test": "umi-test",
@@ -23,14 +24,22 @@
     "@ant-design/pro-layout": "^5.0.12",
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.2.20",
+    "amap-js-api-typings": "^1.0.1",
     "antd": "^4.6.3",
+    "babel-loader": "^8.1.0",
     "h3-js": "^3.6.4",
     "lint-staged": "^10.0.7",
     "nanoid": "^3.1.12",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "ts-loader": "^8.0.4",
     "umi": "^3.2.20",
     "yorkie": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.3",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
   }
 }

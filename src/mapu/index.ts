@@ -1,11 +1,11 @@
-import mapView, { MapView } from './MapView'
+import { MapView } from './MapView'
 import { Circle } from './Shapes/Circle'
 import { Line } from './Shapes/PolyLine';
 import { Marker } from './Shapes/Marker';
 import { Polygon } from './Shapes/Polygon';
 
 import { colorUtils } from './Utils/color';
-import { MapEvent } from './Models';
+import { MapEvent } from './index.d';
 import { Layer } from './Layer';
 
 export {
@@ -19,5 +19,3 @@ export {
     Layer,
     colorUtils,
 }
-
-export default mapView

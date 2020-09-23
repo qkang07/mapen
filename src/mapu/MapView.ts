@@ -1,7 +1,6 @@
 import { hex2rgb, toRGBA } from './Utils/color'
 import NanoId from 'nanoid'
-import {IRenderContext, IShapeStyle, IPromiseCallback,  ICanvasEvent, LngLat, IMapEventListener, EventType, EventTypes, MapEvent  } from './Models'
-import { Layer } from './Layers/Layer';
+import {IRenderContext, IShapeStyle, IPromiseCallback,  ICanvasEvent, LngLat, IMapEventListener, EventType, EventTypes, MapEvent  } from '../index.d'
 import { MapElement } from './MapElement';
 
 // import * as PIXI from 'pixi.js'
@@ -241,7 +240,10 @@ export class MapView extends MapElement{
         })
 
     }
-
+    contain(pos:LngLat){
+        return false
+    }
+    makeBounds(){return null}
     addChildren(el:MapElement){
         el.view = this
         super.addChildren(el)

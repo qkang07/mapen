@@ -1,14 +1,13 @@
-import { Shape } from "./Shape";
-import { ShapeType, LngLat, IShapeStyle, IRenderContext, IFillImage } from "../Models";
+import { LngLat, IShapeStyle, IRenderContext, IFillImage, Bounds } from "../index.d";
 import { MapElement } from '../MapElement';
 
 export class Marker extends MapElement {
-    shape: ShapeType = 'mark'
     location: LngLat
     image:IFillImage
     
     constructor(location: LngLat, style?: IShapeStyle, image?:IFillImage) {
         super()
+        this.type = "marker"
         this.location = location
         this.style = Object.assign({},this.style, style)
         this.image = image
@@ -34,5 +33,13 @@ export class Marker extends MapElement {
         }
         return super.render(rctx)
 
+    }
+    contain(pos:LngLat){
+        return false
+    }
+
+    protected makeBounds():Bounds{
+        return null
+        
     }
 }

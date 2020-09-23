@@ -1,7 +1,7 @@
 import {nanoid} from 'nanoid'
 import { MapView } from './MapView'
-import { IShapeStyle, Bounds, LngLat, MapEvent, IRenderContext } from './Models'
-import { zoomLevels } from './Utils'
+import { IShapeStyle, Bounds, LngLat, MapEvent, IRenderContext, ITile } from '../../index.d'
+import { isShape, zoomLevels } from './Utils'
 import { SortedMap } from './Utils/sortedMap'
 
 class RankLayer {
@@ -12,7 +12,7 @@ class RankLayer {
     }
 }
 
-export class MapElement {
+export abstract class MapElement {
     id:string = nanoid()
     name?:string
     
@@ -23,6 +23,8 @@ export class MapElement {
     type:'layer'|'circle'|'line'|'marker'|'polygon'|'shape'
     listeners:Map<string,((ev:MapEvent)=>any)[]> = new Map()
     visible:boolean = true
+
+    tiles:ITile[] = []
 
     dataset:any = {}
     view:MapView
@@ -44,7 +46,7 @@ export class MapElement {
     }
     protected canvas?: HTMLCanvasElement | OffscreenCanvas
     protected bitmap:ImageBitmap
-    protected bounds:Bounds
+    bounds:Bounds
 
     constructor(view?:MapView){
         if(view){
@@ -63,9 +65,8 @@ export class MapElement {
         return null
     }
 
-    contain(pos:LngLat){
-        return false
-    }
+    abstract contain(pos:LngLat):boolean
+
     addChildren(el:MapElement){
         el.parent = this
         let layer = this.childrenCollection.get(el.zIndex)
@@ -168,15 +169,11 @@ export class MapElement {
         
     }
 
-    protected makeBounds():Bounds{
-        if(this.type == 'layer'){
-
-        }
-        return null
-    }
+    protected abstract makeBounds():Bounds
 
     protected renderOffScreen(){
-
+        if(isShape(this)){
+        }
     }
 
     protected async renderSingle(z:number, x:number, y:number){
