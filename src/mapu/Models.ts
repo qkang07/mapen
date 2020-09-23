@@ -1,19 +1,15 @@
-
-import { MapElement } from './MapElement';
-
-import { MapView } from './MapView';
-
-
+import { MapElement } from './MapElement'
+import {LngLat} from '../../index'
 
 export class MapEvent extends MouseEvent {
     extData:any
-    static create(mouseEv: MouseEvent, extData?:any) : MapEvent {
+    pos:LngLat
+    mapElement:MapElement
+    
+    static create(mouseEv: MouseEvent, pos:LngLat, extData?:any) : MapEvent {
         let mapEv: MapEvent = mouseEv as MapEvent
         mapEv.extData = extData
+        mapEv.pos = pos
         return mapEv
     }
 }
-
-
-
-export const EventTypes = ['click', 'hover', 'dblclick', 'mousemove','unmousemove']

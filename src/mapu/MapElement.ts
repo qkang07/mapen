@@ -1,8 +1,9 @@
 import {nanoid} from 'nanoid'
 import { MapView } from './MapView'
-import { IShapeStyle, Bounds, LngLat, MapEvent, IRenderContext, ITile } from '../../index.d'
+import { IShapeStyle, Bounds, LngLat, IRenderContext, ITile, ElementType } from '../../index.d'
 import { isShape, zoomLevels } from './Utils'
 import { SortedMap } from './Utils/sortedMap'
+import { MapEvent } from './Models'
 
 class RankLayer {
     zIndex: number
@@ -20,7 +21,7 @@ export abstract class MapElement {
     private zIndex:number = 0
 
     parent: MapElement
-    type:'layer'|'circle'|'line'|'marker'|'polygon'|'shape'
+    type: ElementType
     listeners:Map<string,((ev:MapEvent)=>any)[]> = new Map()
     visible:boolean = true
 
@@ -29,7 +30,8 @@ export abstract class MapElement {
     dataset:any = {}
     view:MapView
     style:IShapeStyle = {
-        
+        strokeColor:'transparent',
+        strokeWidth:1
     }
 
     // this is a key property
@@ -48,11 +50,8 @@ export abstract class MapElement {
     protected bitmap:ImageBitmap
     bounds:Bounds
 
-    constructor(view?:MapView){
-        if(view){
-            this.view = view
-        }
-        
+    constructor(){
+       
     }
 
     async render(rctx:IRenderContext): Promise<ImageBitmap|void> {
@@ -69,6 +68,7 @@ export abstract class MapElement {
 
     addChildren(el:MapElement){
         el.parent = this
+        el.view = this.view
         let layer = this.childrenCollection.get(el.zIndex)
         if(!layer){
             layer = new RankLayer(el.zIndex)
@@ -143,6 +143,7 @@ export abstract class MapElement {
     }
     trigger(eventName:string,ev:MapEvent){
         const triggerSelf = ()=>{
+            ev.mapElement = this
             let evList =this.listeners.get(eventName)
             if(evList){
                 evList.forEach(h=>h(ev))
@@ -161,7 +162,7 @@ export abstract class MapElement {
                 triggerSelf()
                 return true
             }
-        } else if(this.contain([ev.x, ev.y])){
+        } else if(this.contain(ev.pos)){
             triggerSelf()
             return true
         }

@@ -1,15 +1,13 @@
-import { LngLat, IRenderContext, Bounds, IShapeStyle } from "../index.d";
+import { LngLat, IRenderContext, Bounds, IShapeStyle } from "../../../index";
 import { mapDistance } from '../Utils';
 import { MapElement } from '../MapElement';
 
 export class Circle extends MapElement {
     center: LngLat
     radius: number
-    centerPixel: { x: number, y: number }
-    radiusPixel:number
     constructor(center: LngLat, radius: number, style?: IShapeStyle) {
         super()
-        this.type = 'circle'
+        this.type='circle'
         this.center = center
         this.radius = radius
         this.style = Object.assign({},this.style, style)
@@ -47,10 +45,6 @@ export class Circle extends MapElement {
       
         ctx.arc(centerPixel.x, centerPixel.y, r, 0, 2 * Math.PI)
 
-        this.centerPixel = centerPixel
-        this.radiusPixel = r
-
-
         ctx.closePath()
         ctx.stroke()
         ctx.fill()
@@ -58,10 +52,7 @@ export class Circle extends MapElement {
     }
     contain(pos:LngLat) {
         let [x,y ]= pos
-        if(!this.centerPixel){
-            return false
-        }
-        return Math.sqrt(Math.pow(x - this.centerPixel.x, 2) + Math.pow(y - this.centerPixel.y, 2)) < this.radiusPixel
+        return mapDistance(pos, this.center) < this.radius
     }
     protected makeBounds():Bounds{
         return [

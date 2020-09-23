@@ -5,7 +5,7 @@ import { Marker } from './Shapes/Marker';
 import { Polygon } from './Shapes/Polygon';
 
 import { colorUtils } from './Utils/color';
-import { MapEvent } from './index.d';
+import { MapEvent } from './Models';
 import { Layer } from './Layer';
 
 export {

@@ -1,4 +1,4 @@
-import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../index.d";
+import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../../../index";
 import windingLine from '../Utils/windingLine';
 import { MapElement } from '../MapElement';
 import { makePolyBounds } from '../Utils';
@@ -12,15 +12,14 @@ function isAroundEqual(a, b) {
 
 export class Polygon extends MapElement  {
     path: LngLat[] = []
-    pixelPath: LngLat[] = []
     h3Index: string = ''
     
     offImgSize: LngLat
 
     constructor(path: LngLat[], style?: IShapeStyle) {
         super()
-        this.type='polygon'
         this.path = path
+        this.type = 'polygon'
         this.style = Object.assign({}, this.style, style)
         // this.setStyle(style)
     }
@@ -38,7 +37,6 @@ export class Polygon extends MapElement  {
             let p = this.path[i]
             let pixel = this.view.lnglatToPixel(p)
             let screenPos: LngLat = [pixel.x, pixel.y]
-            this.pixelPath.push(screenPos)
             ctx.lineTo(pixel.x,pixel.y)
             
         }
@@ -48,9 +46,10 @@ export class Polygon extends MapElement  {
         return super.render(rctx)
     }
     contain(pos:LngLat) {
+        // console.log(pos, this.path)
         let x= pos[0], y = pos[1]
         var w = 0;
-        let points = this.pixelPath
+        let points = this.path
         var p = points[0];
 
         if (!p) {

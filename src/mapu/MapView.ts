@@ -1,9 +1,6 @@
-import { hex2rgb, toRGBA } from './Utils/color'
-import NanoId from 'nanoid'
-import {IRenderContext, IShapeStyle, IPromiseCallback,  ICanvasEvent, LngLat, IMapEventListener, EventType, EventTypes, MapEvent  } from '../index.d'
+import {IRenderContext, IShapeStyle, IPromiseCallback, LngLat, EventType  } from '../../index.d'
 import { MapElement } from './MapElement';
-
-// import * as PIXI from 'pixi.js'
+import { MapEvent } from './Models';
 
 const AMap:any = (window as any).AMap
 export class MapView extends MapElement{
@@ -25,11 +22,10 @@ export class MapView extends MapElement{
  
     customCanvasLayer: any
 
-    renderFlag:boolean = false
+    private renderFlag:boolean = false
 
     // 当发生交互事件时，置为true，之后触发一次渲染，并在渲染时触发事件处理
     canvasEvent: MouseEvent = null
-    mapShapesMap: Map<string, any> = new Map()
 
     // 事件相关
     mouseDown: boolean = false
@@ -40,8 +36,6 @@ export class MapView extends MapElement{
     private renderedImg?: any
     private latRange?: any[]
     private lngRange?: any[]
-
-    private mapEventListeners:Map<string, IMapEventListener> = new Map()
 
     extraData:any = {}
     
@@ -158,59 +152,27 @@ export class MapView extends MapElement{
                     // })
                    
                 }
-                ['click','dblclick', 'mousemove'].forEach((etype:EventType) => {
-                    canvas.addEventListener(etype, (event: MouseEvent) => {
+                ['click','dblclick', 'mousemove'].forEach((ename:EventType) => {
+                    canvas.addEventListener(ename, (event: MouseEvent) => {
                         let dur = Date.now() - this.mouseDownTime
-                        if (etype === 'click' && dur > 200) {
+                        if (ename === 'click' && dur > 300) {
                             return
                         }
                         // 鼠标按下时不响应事件
                         if (this.mouseDown) {
                             return
                         }
-                        // console.log(this.eventListenerList)
-                        // let listener = this.eventListenerList.find(el => el.type === etype)
 
+                        let lnglat = this.pixelToLngLat(event.offsetX, event.offsetY)
+                        // console.log(lnglat, event)
+              
+                        const mapEvent = MapEvent.create(event, lnglat)
                         
-                        // let shapeListener: IMapEventListener = null
-                        // let layerListener: IMapEventListener = null
-                        // let mapListener: IMapEventListener = null
-
-                        const mapEvent = MapEvent.create(event)
-                        // let rctx: IRenderContext = { event: mapEvent }
-                        // if (listener.level === 'map') {
-                        //     mapListener = listener
-                        // }
-
-                        // this.eachChildren(ele=>{
+                        this.eachChildren(ele=>{
+                            ele.trigger(ename,mapEvent)
+                        })
                             
-                        // })
-                            
-                        // for (let layer of this.layers.sort((l1,l2)=>l2.zIndex - l1.zIndex)) {
-                        //     let foundShape = null
-                        //     for (let shape of layer.shapes) {
-                        //         if (shape.contain && shape.contain(event.offsetX, event.offsetY)) {
-                        //             if (shape.eventListeners.has(etype)) {
-                        //                 shape.eventListeners.get(etype).handler(mapEvent)
-                        //             }
-                        //             foundShape = shape
-                        //             mapEvent.sourceObjects.push(shape)
-                        //             break
-                        //         }
-                        //     }
-                        //     if (foundShape) {
-                        //         if (layer.eventListeners.has(etype)) {
-                        //             layer.eventListeners.get(etype).handler(mapEvent)
-                        //         }
-                        //         mapEvent.sourceObjects.push(layer)
-                        //         break
-                        //     }
-                        // }
-                      
-                        // // layer.render(rctx)
-                        // if (this.mapEventListeners.has(etype)) {
-                        //     this.mapEventListeners.get(etype).handler(mapEvent)
-                        // }
+                       
                     })
                 })
                 canvas.addEventListener('mousedown', ev => {
@@ -254,8 +216,8 @@ export class MapView extends MapElement{
         
         let lngRatio = x / this.canvas.width 
         let latRatio = y / this.canvas.height
-        let lng = (ne[1] - sw[1]) * lngRatio + sw[1]
-        let lat = (ne[0] - sw[0]) * (1-latRatio) + sw[0]
+        let lng = (ne[0] - sw[0]) * lngRatio + sw[0]
+        let lat = (ne[1] - sw[1]) * (1-latRatio) + sw[1]
         return [lng,lat]
     
     }

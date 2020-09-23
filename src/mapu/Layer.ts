@@ -1,9 +1,5 @@
-import { LngLat, IShapeStyle, IMapEventListener, EventType, IRenderContext, Bounds } from "../../index.d";
-import {MapEvent} from './Models'
+import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../../index";
 import { MapElement } from './MapElement';
-import { MapView } from '.';
-
-
 
 export interface IDataParams {
     path?: any
@@ -20,8 +16,8 @@ export interface IExtendImageData extends ImageData{
 
 export class Layer extends MapElement {
 
-    constructor(view:MapView){
-        super(view)
+    constructor(){
+        super()
         this.type = 'layer'
     }
     

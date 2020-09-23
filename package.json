@@ -1,5 +1,9 @@
 {
-  "private": true,
+  "name": "mapu",
+  "description": "a geographic visualization tool based on amap",
+  "version": "0.2.0",
+  "private": false,
+  "main": "dist/index.js",
   "scripts": {
     "start": "umi dev",
     "build": "webpack --config build-script/webpack.config.js",
@@ -21,25 +25,25 @@
     ]
   },
   "dependencies": {
+    "amap-js-api-typings": "^1.0.1",
+    "nanoid": "^3.1.12"
+  },
+  "devDependencies": {
     "@ant-design/pro-layout": "^5.0.12",
     "@umijs/preset-react": "1.x",
     "@umijs/test": "^3.2.20",
-    "amap-js-api-typings": "^1.0.1",
     "antd": "^4.6.3",
     "babel-loader": "^8.1.0",
-    "h3-js": "^3.6.4",
     "lint-staged": "^10.0.7",
-    "nanoid": "^3.1.12",
     "prettier": "^1.19.1",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "ts-loader": "^8.0.4",
-    "umi": "^3.2.20",
-    "yorkie": "^2.0.0"
-  },
-  "devDependencies": {
     "typescript": "^4.0.3",
+    "umi": "^3.2.20",
     "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.12"
+    "webpack-cli": "^3.3.12",
+    "yorkie": "^2.0.0"
+
   }
 }

@@ -1,4 +1,4 @@
-import { LngLat, IShapeStyle, IRenderContext, IFillImage, Bounds } from "../index.d";
+import { LngLat, IShapeStyle, IRenderContext, IFillImage, Bounds } from "../../../index";
 import { MapElement } from '../MapElement';
 
 export class Marker extends MapElement {
@@ -7,7 +7,7 @@ export class Marker extends MapElement {
     
     constructor(location: LngLat, style?: IShapeStyle, image?:IFillImage) {
         super()
-        this.type = "marker"
+        this.type = 'marker'
         this.location = location
         this.style = Object.assign({},this.style, style)
         this.image = image

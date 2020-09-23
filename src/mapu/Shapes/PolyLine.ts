@@ -1,4 +1,4 @@
-import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../index.d";
+import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../../../index";
 import { MapElement } from '../MapElement';
 import { makePolyBounds } from '../Utils';
 export class Line extends MapElement {
@@ -8,8 +8,8 @@ export class Line extends MapElement {
 
     constructor(path: LngLat[], style?: IShapeStyle) {
         super()
-        this.type = 'line'
         this.path = path
+        this.type = 'line'
         this.style = Object.assign({}, this.style, style)
         // this.setStyle(style)
     }
