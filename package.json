@@ -45,5 +45,7 @@
     "webpack-cli": "^3.3.12",
     "yorkie": "^2.0.0"
 
-  }
+  },
+  "author": "qikang",
+  "license": "ISC"
 }
