@@ -1,4 +1,4 @@
-import {IRenderContext, IShapeStyle, IPromiseCallback, LngLat, EventType  } from '../index.d'
+import {IRenderContext, IShapeStyle, IPromiseCallback, LngLat, EventType, Pixel  } from '../index.d'
 import { MapElement } from './MapElement';
 import { MapEvent } from './Models';
 
@@ -222,7 +222,7 @@ export class MapView extends MapElement{
     
     }
 
-    lnglatToPixel(lnglat: LngLat) {
+    lnglatToPixel(lnglat: LngLat):Pixel {
 
         let [sw, ne] = this.bounds
       

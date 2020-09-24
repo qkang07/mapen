@@ -1,6 +1,6 @@
 import {nanoid} from 'nanoid'
 import { MapView } from './MapView'
-import { IShapeStyle, Bounds, LngLat, IRenderContext, ITile, ElementType } from '../index.d'
+import { IShapeStyle, Bounds, LngLat, IRenderContext, ITile, ElementType, Pixel } from '../index.d'
 import { isShape, zoomLevels } from './Utils'
 import { SortedMap } from './Utils/sortedMap'
 import { MapEvent } from './Models'
@@ -64,7 +64,7 @@ export abstract class MapElement {
         return null
     }
 
-    abstract contain(pos:LngLat):boolean
+    abstract contain(pos:LngLat, pix?:Pixel):boolean
 
     addChildren(el:MapElement){
         el.parent = this
@@ -162,7 +162,7 @@ export abstract class MapElement {
                 triggerSelf()
                 return true
             }
-        } else if(this.contain(ev.pos)){
+        } else if(this.contain(ev.pos,{x:ev.offsetX, y:ev.offsetY})){
             triggerSelf()
             return true
         }

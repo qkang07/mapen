@@ -41,6 +41,7 @@ export declare interface IPromiseCallback{
 }
 
 export declare type LngLat = [number, number]
+export declare type Pixel = {x:number,y:number}
 
 export declare type Bounds = [LngLat, LngLat]
 

@@ -1,9 +1,11 @@
-import { LngLat, IShapeStyle, IRenderContext, IFillImage, Bounds } from "../../index";
+import { distance } from '@/Utils';
+import { LngLat, IShapeStyle, IRenderContext, IFillImage, Bounds, Pixel } from "../../index";
 import { MapElement } from '../MapElement';
 
 export class Marker extends MapElement {
     location: LngLat
     image:IFillImage
+    pixel:Pixel = {x:0,y:0}
     
     constructor(location: LngLat, style?: IShapeStyle, image?:IFillImage) {
         super()
@@ -21,7 +23,8 @@ export class Marker extends MapElement {
         if (this.style.opacity) {
             ctx.globalAlpha = this.style.opacity
         }
-        let pixel = this.view.lnglatToPixel(this.location)
+        let pixel:Pixel = this.view.lnglatToPixel(this.location)
+        this.pixel = pixel
         if(this.image){
             let height = this.image.height || this.image.imgData.height as number
             let width = this.image.width || this.image.imgData.width as number
@@ -34,8 +37,8 @@ export class Marker extends MapElement {
         return super.render(rctx)
 
     }
-    contain(pos:LngLat){
-        return false
+    contain(pos:LngLat, pixel:Pixel){
+        return distance(pixel, this.pixel) < this.style.strokeWidth
     }
 
     protected makeBounds():Bounds{

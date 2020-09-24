@@ -1,5 +1,5 @@
 import { MapElement } from '../MapElement';
-import { Bounds, LngLat } from '../../index';
+import { Bounds, LngLat, Pixel } from '../../index';
 
 export const mapDistance = (p1:LngLat,p2:LngLat)=>{
     const Pu = 0.017453292519943295
@@ -12,6 +12,10 @@ export const mapDistance = (p1:LngLat,p2:LngLat)=>{
     , d = p1[1] * d - p2[1] * d
     let  ee = (1 - e(h - f) + (1 - e(d)) * e(f) * e(h)) / 2;
   return k * Math.asin(Math.sqrt(ee))
+}
+
+export function distance(p1:Pixel, p2:Pixel){
+  return Math.sqrt(Math.pow(p1.x-p2.x,2) + Math.pow(p1.y-p2.y,2))
 }
 
 export const zoomLevels = []
