@@ -19,7 +19,7 @@ export class Circle extends MapElement {
 
         ctx.fillStyle = style.fillColor
         ctx.strokeStyle = style.strokeColor
-        ctx.lineWidth = style.strokeWeight
+        ctx.lineWidth = style.strokeWidth
      
         ctx.beginPath()
         

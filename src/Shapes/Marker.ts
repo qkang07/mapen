@@ -19,7 +19,7 @@ export class Marker extends MapElement {
         let ctx = rctx.ctx
         ctx.fillStyle = this.style.fillColor
         ctx.strokeStyle = this.style.strokeColor
-        ctx.lineWidth = this.style.strokeWeight
+        ctx.lineWidth = this.style.strokeWidth
         if (this.style.opacity) {
             ctx.globalAlpha = this.style.opacity
         }
