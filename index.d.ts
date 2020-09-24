@@ -95,19 +95,23 @@ export declare class Layer extends MapElement {
 
 export declare class Polygon extends MapElement {
     path: LngLat[]
+    constructor(path: LngLat[], style?: IShapeStyle)
 }
 
 export declare class Circle extends MapElement {
     center: LngLat
     radius: number
+    constructor(center: LngLat, radius: number, style?: IShapeStyle)
 }
 
 export declare class PolyLine extends MapElement {
     path: LngLat[]
+    constructor(path: LngLat[], style?: IShapeStyle)
 
 }
 
 export declare class Marker extends MapElement {
+    constructor(location: LngLat, style?: IShapeStyle, image?:IFillImage)
     position:LngLat
     image:IFillImage
 }

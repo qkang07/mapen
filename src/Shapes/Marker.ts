@@ -25,7 +25,7 @@ export class Marker extends MapElement {
         if(this.image){
             let height = this.image.height || this.image.imgData.height as number
             let width = this.image.width || this.image.imgData.width as number
-            ctx.drawImage(this.image.imgData, pixel.x - (width / 2), pixel.y - (height / 2))
+            ctx.drawImage(this.image.imgData, pixel.x - (width / 2), pixel.y - (height / 2),width, height)
         } else {
             ctx.beginPath()
             ctx.arc(pixel.x, pixel.y, this.style.strokeWidth, 0, 2 * Math.PI)
