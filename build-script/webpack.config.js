@@ -1,9 +1,9 @@
 const path = require('path');
 console.log(__dirname)
 module.exports = {
-    mode:'production',
+    mode:'development',
 	entry: {
-		main:path.resolve(__dirname, '../src/mapu/index.ts'),
+		main:path.resolve(__dirname, '../src/index.ts'),
 	},
 	output: {
 		filename: 'index.js',

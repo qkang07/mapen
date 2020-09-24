@@ -1,4 +1,4 @@
-import {IRenderContext, IShapeStyle, IPromiseCallback, LngLat, EventType  } from '../../index.d'
+import {IRenderContext, IShapeStyle, IPromiseCallback, LngLat, EventType  } from '../index.d'
 import { MapElement } from './MapElement';
 import { MapEvent } from './Models';
 

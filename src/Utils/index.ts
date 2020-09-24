@@ -1,5 +1,5 @@
 import { MapElement } from '../MapElement';
-import { Bounds, LngLat } from '../../../index';
+import { Bounds, LngLat } from '../../index';
 
 export const mapDistance = (p1:LngLat,p2:LngLat)=>{
     const Pu = 0.017453292519943295

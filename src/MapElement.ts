@@ -1,6 +1,6 @@
 import {nanoid} from 'nanoid'
 import { MapView } from './MapView'
-import { IShapeStyle, Bounds, LngLat, IRenderContext, ITile, ElementType } from '../../index.d'
+import { IShapeStyle, Bounds, LngLat, IRenderContext, ITile, ElementType } from '../index.d'
 import { isShape, zoomLevels } from './Utils'
 import { SortedMap } from './Utils/sortedMap'
 import { MapEvent } from './Models'

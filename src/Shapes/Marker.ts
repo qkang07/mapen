@@ -1,4 +1,4 @@
-import { LngLat, IShapeStyle, IRenderContext, IFillImage, Bounds } from "../../../index";
+import { LngLat, IShapeStyle, IRenderContext, IFillImage, Bounds } from "../../index";
 import { MapElement } from '../MapElement';
 
 export class Marker extends MapElement {

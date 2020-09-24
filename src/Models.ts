@@ -1,5 +1,5 @@
 import { MapElement } from './MapElement'
-import {LngLat} from '../../index'
+import {LngLat} from '../index'
 
 export class MapEvent extends MouseEvent {
     extData:any

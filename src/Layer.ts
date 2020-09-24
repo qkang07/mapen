@@ -1,4 +1,4 @@
-import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../../index";
+import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../index";
 import { MapElement } from './MapElement';
 
 export interface IDataParams {

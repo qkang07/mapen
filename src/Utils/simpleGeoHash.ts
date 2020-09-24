@@ -1,4 +1,4 @@
-import { Bounds, ITile, LngLat } from '../../../index'
+import { Bounds, ITile, LngLat } from '../../index'
 
 export const resSpans = []
 let rad = 180

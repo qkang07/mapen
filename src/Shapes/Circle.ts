@@ -1,4 +1,4 @@
-import { LngLat, IRenderContext, Bounds, IShapeStyle } from "../../../index";
+import { LngLat, IRenderContext, Bounds, IShapeStyle } from "../../index";
 import { mapDistance } from '../Utils';
 import { MapElement } from '../MapElement';
 
