@@ -206,10 +206,7 @@ export class MapView extends MapElement{
         return false
     }
     makeBounds(){return null}
-    addChildren(el:MapElement){
-        el.view = this
-        super.addChildren(el)
-    }
+
 
     pixelToLngLat(x:number,y:number):LngLat{
         let [sw, ne] = this.bounds

@@ -28,7 +28,7 @@ export abstract class MapElement {
     tiles:ITile[] = []
 
     dataset:any = {}
-    view:MapView
+    protected view:MapView
     style:IShapeStyle = {
         strokeColor:'transparent',
         strokeWidth:1
@@ -75,7 +75,10 @@ export abstract class MapElement {
             this.childrenCollection.set(el.zIndex, layer)
         }
         layer.elements[el.id] = el
-        this.view.render()
+        if(this.view){
+
+            this.view.render()
+        }
     }
     setChildren(els:MapElement[]){
         this.childrenCollection.forEach(l=>{
@@ -87,7 +90,10 @@ export abstract class MapElement {
     }
     clear(){
         this.childrenCollection.forEach(l=>{l.elements={}})
-        this.view.render()
+        if(this.view){
+
+            this.view.render()
+        }
     }
     setZIndex(zIndex:number){
         if(this.parent){
@@ -105,6 +111,11 @@ export abstract class MapElement {
         }
     }
     getZIndex(){return this.zIndex}
+
+    setView(view:MapView){
+        this.view = view
+        view.render()
+    }
 
     eachChildren(cb:(item:MapElement) => boolean|void){
         this.childrenCollection.forEach(layer=>{
