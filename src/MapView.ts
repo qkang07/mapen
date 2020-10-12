@@ -15,6 +15,8 @@ export class MapView extends MapElement{
     ready: -1|0|1 = 0
     readyPromise: IPromiseCallback = null
 
+    zoomLevel?:number
+
     mapBounds:[LngLat, LngLat] = [[0,0],[0,0]]
     // pixiApp: PIXI.Application = null
     
@@ -94,7 +96,7 @@ export class MapView extends MapElement{
                     let latRange = [], lngRange = []
                     let ne = bounds.getNorthEast(), sw = bounds.getSouthWest()
                     this.bounds = [[sw.getLng(), sw.getLat()],[ne.getLng(),ne.getLat()]]
-
+                    this.zoomLevel = this.map.getZoom()
                 
                     rctx.mapBounds = this.mapBounds
                     // if (!this.latRange) {

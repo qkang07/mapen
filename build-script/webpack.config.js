@@ -1,7 +1,6 @@
 const path = require('path');
 console.log(__dirname)
 module.exports = {
-    mode:'production',
 	entry: {
 		main:path.resolve(__dirname, '../src/index.ts'),
 	},

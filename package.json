@@ -5,7 +5,8 @@
   "private": false,
   "main": "dist/index.js",
   "scripts": {
-    "build": "webpack --config build-script/webpack.config.js"
+    "build": "webpack --config build-script/webpack.config.js --mode=production",
+    "build-dev": "webpack --config build-script/webpack.config.js --mode=development"
   },
   "dependencies": {
     "amap-js-api-typings": "^1.0.1",

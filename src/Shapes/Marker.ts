@@ -6,6 +6,7 @@ export class Marker extends MapElement {
     location: LngLat
     image:IFillImage
     pixel:Pixel = {x:0,y:0}
+    scale?:(zoom:number)=>number
     
     constructor(location: LngLat, style?: IShapeStyle, image?:IFillImage) {
         super()
@@ -25,13 +26,17 @@ export class Marker extends MapElement {
         }
         let pixel:Pixel = this.view.lnglatToPixel(this.location)
         this.pixel = pixel
+        let ratio = 1
+        if(this.scale){
+            ratio = this.scale(this.view.zoomLevel)
+        }
         if(this.image){
             let height = this.image.height || this.image.imgData.height as number
             let width = this.image.width || this.image.imgData.width as number
-            ctx.drawImage(this.image.imgData, pixel.x - (width / 2), pixel.y - (height / 2),width, height)
+            ctx.drawImage(this.image.imgData, pixel.x - (width / 2), pixel.y - (height / 2),width * ratio, height * ratio)
         } else {
             ctx.beginPath()
-            ctx.arc(pixel.x, pixel.y, this.style.strokeWidth, 0, 2 * Math.PI)
+            ctx.arc(pixel.x, pixel.y, this.style.strokeWidth * ratio, 0, 2 * Math.PI)
             ctx.stroke()
         }
         return super.render(rctx)

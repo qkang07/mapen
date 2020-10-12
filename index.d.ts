@@ -115,4 +115,10 @@ export declare class Marker extends MapElement {
     constructor(location: LngLat, style?: IShapeStyle, image?:IFillImage)
     position:LngLat
     image:IFillImage
+    scale?:(zoom:number)=>number
+}
+
+
+export declare interface IRenderer {
+    renderCircle
 }
