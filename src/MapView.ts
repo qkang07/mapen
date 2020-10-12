@@ -227,8 +227,10 @@ export class MapView extends MapElement{
       
         let lngRatio = (lnglat[0] - sw[0]) / (ne[0] - sw[0])
         let latRatio = (lnglat[1] - sw[1]) / (ne[1] - sw[1])
-        let x = Math.round(lngRatio * this.canvas.width)
-        let y = Math.round((1 - latRatio) * this.canvas.height)
+        // let x = Math.round(lngRatio * this.canvas.width)
+        // let y = Math.round((1 - latRatio) * this.canvas.height)
+        let x = lngRatio * this.canvas.width
+        let y = (1 - latRatio) * this.canvas.height
         return { x, y }
     
     }
