@@ -56,7 +56,7 @@ class GroupMarker extends Marker {
 export class MarkerLayer extends Layer {
     protected groupedMarkers:GroupMarker[] = []
 
-    groupTreshold:number = 0
+    groupThreshold:number = 0
     
     canMerge?:(m1:Marker, m2:Marker, zoom:number)=>boolean 
 
@@ -93,7 +93,7 @@ export class MarkerLayer extends Layer {
 
             gmarkers.forEach(checkMerge)
             markers.forEach(checkMerge)
-            if(minDist < this.groupTreshold && nearMarker){
+            if(minDist < this.groupThreshold && nearMarker){
                 let gm:GroupMarker = nearMarker as GroupMarker
                 if(gm.markers){
                     gm.markers.push(ele)
