@@ -49,7 +49,8 @@ class GroupMarker extends Marker {
         textMeasure.width
         ctx.fillText(num,pixel.x - textMeasure.width /2 + this.offset.x, pixel.y - this.textStyle.fontSize / 2 + this.offset.y)
 
-        return super.render(rctx)
+        // return super.render(rctx)
+        return null
 
     }
 }
