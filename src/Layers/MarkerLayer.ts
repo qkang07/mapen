@@ -95,6 +95,8 @@ export class MarkerLayer extends Layer {
             markers.forEach(checkMerge)
             if(minDist < this.groupThreshold && nearMarker){
                 let gm:GroupMarker = nearMarker as GroupMarker
+                gm.setView(this.view)
+                gm.parent = this
                 if(gm.markers){
                     gm.markers.push(ele)
                     ele.visible = false
