@@ -8,6 +8,8 @@ import { colorUtils } from './Utils/color';
 import { MapEvent } from './Models';
 import { Layer } from './Layer';
 
+import {MarkerLayer} from './Layers/MarkerLayer'
+
 export {
     MapEvent,
     MapView,
@@ -17,5 +19,8 @@ export {
     Polygon,
 
     Layer,
+
+    MarkerLayer,
+
     colorUtils,
 }

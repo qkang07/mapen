@@ -56,7 +56,7 @@ export declare class MapEvent extends MouseEvent {
 
 export declare type EventType = 'click' | 'hover' | 'dblclick' | 'mousemove' |'unmousemove'
 
-export declare type ElementType = 'layer'|'circle'|'line'|'marker'|'polygon'|'shape'
+export declare type ElementType = 'layer'|'circle'|'line'|'marker'|'polygon'|'shape'|'groupmarker'
 
 export declare class MapElement {
     id:string
@@ -121,4 +121,25 @@ export declare class Marker extends MapElement {
 
 export declare interface IRenderer {
     renderCircle
+}
+
+declare class GroupMarker extends Marker {
+    constructor(marker:Marker)
+
+    markers:Marker[]
+    offset:Pixel
+    numOffset:Pixel
+
+
+    textStyle:{
+        fontSize:number
+        color:string
+    }
+}
+
+export declare class MarkerLayer extends Layer{
+    groupThreshold:number
+    canMerge?:(m1:Marker, m2:Marker, zoom:number)=>boolean 
+    groupImage:(gm:GroupMarker)=>any
+    addChildren(el:Marker)
 }

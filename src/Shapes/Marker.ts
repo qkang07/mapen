@@ -17,6 +17,9 @@ export class Marker extends MapElement {
     }
 
     async render(rctx:IRenderContext):Promise<ImageBitmap|void> {
+        if(!this.visible){
+            return null
+        }
         let ctx = rctx.ctx
         ctx.fillStyle = this.style.fillColor
         ctx.strokeStyle = this.style.strokeColor
