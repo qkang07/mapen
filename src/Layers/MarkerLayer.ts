@@ -43,7 +43,8 @@ class GroupMarker extends Marker {
 
         let num = this.markers.length.toString()
        
-        ctx.font = `${this.textStyle.fontSize}px ${this.textStyle.color}`
+        ctx.font = `${this.textStyle.fontSize}px`
+        ctx.fillStyle = this.textStyle.color
         let textMeasure = ctx.measureText(num)
         textMeasure.width
         ctx.fillText(num,pixel.x - textMeasure.width /2 + this.offset.x, pixel.y - this.textStyle.fontSize / 2 + this.offset.y)
