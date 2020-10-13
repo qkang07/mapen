@@ -140,6 +140,6 @@ declare class GroupMarker extends Marker {
 export declare class MarkerLayer extends Layer{
     groupThreshold:number
     canMerge?:(m1:Marker, m2:Marker, zoom:number)=>boolean 
-    groupImage:(gm:GroupMarker)=>any
+    beforeRender:(gm:GroupMarker)=>any
     addChildren(el:Marker)
 }

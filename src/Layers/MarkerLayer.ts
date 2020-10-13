@@ -60,7 +60,7 @@ export class MarkerLayer extends Layer {
     
     canMerge?:(m1:Marker, m2:Marker, zoom:number)=>boolean 
 
-    groupImage:(gm:GroupMarker)=>any
+    beforeRender:(gm:GroupMarker)=>any
 
     async render(rctx?: IRenderContext ) {
         let gmarkers:GroupMarker[] = []
@@ -116,8 +116,8 @@ export class MarkerLayer extends Layer {
         })
 
         gmarkers.forEach(m=>{
-            if(this.groupImage){
-                this.groupImage(m)
+            if(this.beforeRender){
+                this.beforeRender(m)
             }
             m.render(rctx)
         })
