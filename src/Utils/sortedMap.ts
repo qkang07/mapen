@@ -6,8 +6,12 @@ export class SortedMap<T> {
     get(k:number):T{
         return this.obj[k]
     }
-    forEach(cb:(item:T, key)=>boolean|void){
-        for(let k in this.obj){
+    forEach(cb:(item:T, key)=>boolean|void, reverse?:boolean){  
+        let keys = Object.keys(this.obj)
+        if(reverse){
+            keys.reverse()
+        }
+        for(let k of keys){
             let flag = cb(this.obj[k], k)
             if(flag === false){
                 break

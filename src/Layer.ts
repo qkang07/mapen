@@ -69,7 +69,9 @@ export class Layer extends MapElement {
         })
         return result
     }
-
+    protected customRender?(rctx:IRenderContext, renderStyle:IShapeStyle):any {
+        
+    }
     protected makeBounds():Bounds{
         let min:LngLat = [180,90], max:LngLat=[-180,-90]
         this.eachChildren(ele=>{

@@ -4,6 +4,7 @@ import { IShapeStyle, Bounds, LngLat, IRenderContext, ITile, ElementType, Pixel 
 import { isShape, zoomLevels } from './Utils'
 import { SortedMap } from './Utils/sortedMap'
 import { MapEvent } from './Models'
+import { EventManager } from './Utils/eventManager'
 
 class RankLayer {
     zIndex: number
@@ -22,13 +23,16 @@ export abstract class MapElement {
 
     parent: MapElement
     type: ElementType
+
+    protected eventManager:EventManager<MapEvent> = new EventManager()
+
     listeners:Map<string,((ev:MapEvent)=>any)[]> = new Map()
     visible:boolean = true
 
     tiles:ITile[] = []
 
     dataset:any = {}
-    protected view:MapView
+    view:MapView
     style:IShapeStyle = {
         strokeColor:'transparent',
         strokeWidth:1
@@ -55,7 +59,19 @@ export abstract class MapElement {
     }
 
     async render(rctx:IRenderContext): Promise<ImageBitmap|void> {
+        let renderStyle:IShapeStyle = JSON.parse(JSON.stringify(this.style))
+        if(this.style.fillImage){
+            renderStyle.fillImage.imgData = this.style.fillImage.imgData
+        }
+        if(this.beforeRender){
+            if(this.beforeRender(renderStyle) === false){
+                return
+            }
+        }
 
+        if(this.customRender){
+            this.customRender(rctx, renderStyle)
+        }
         if(rctx.offScreen){
             let data = rctx.ctx.getImageData(0,0,this.canvas.width, this.canvas.height)
             let bitmap = await createImageBitmap(data)          
@@ -64,7 +80,10 @@ export abstract class MapElement {
         return null
     }
 
+    beforeRender:(style:IShapeStyle)=> any
+
     abstract contain(pos:LngLat, pix?:Pixel):boolean
+    protected  customRender?(rctx:IRenderContext, renderStyle:IShapeStyle):any
 
     addChildren(el:MapElement){
         el.parent = this
@@ -88,9 +107,9 @@ export abstract class MapElement {
             this.addChildren(ele)
         })
     }
-    clear(){
+    clear(repaint:boolean = true){
         this.childrenCollection.forEach(l=>{l.elements={}})
-        if(this.view){
+        if(this.view && repaint){
 
             this.view.render()
         }
@@ -117,48 +136,31 @@ export abstract class MapElement {
         view.render()
     }
 
-    eachChildren(cb:(item:MapElement) => boolean|void){
+    eachChildren(cb:(item:MapElement) => boolean|void, reverse?:boolean){
         this.childrenCollection.forEach(layer=>{
             let keys = Object.keys(layer.elements)
             for(let key of keys){
                 let flag = cb(layer.elements[key])
                 if(flag === false){
-                    break
+                    return false
                 }
             }
-        })
+        },reverse)
     }
 
     on(eventName:string, handler: (ev:MapEvent)=>any){
-        let evList =this.listeners.get(eventName)
-        if(!evList){
-            evList = []
-            this.listeners.set(eventName, evList)
-        }
-        if(evList.indexOf(handler)<0){
-            evList.push(handler)
-        }
+        this.eventManager.on(eventName, handler)
     }
     off(eventName:string, handler?:(ev:MapEvent)=>any){
-        let evList =this.listeners.get(eventName)
-        if(evList){
-            if(handler){
-                let index = evList.indexOf(handler)
-                if(index>=0){
-                    evList.splice(index,1)
-                }
-            }else {
-                this.listeners.delete(eventName)
-            }
-        }
+       
+        this.eventManager.off(eventName, handler)
+
     }
     trigger(eventName:string,ev:MapEvent){
         const triggerSelf = ()=>{
-            ev.mapElement = this
-            let evList =this.listeners.get(eventName)
-            if(evList){
-                evList.forEach(h=>h(ev))
-            }
+            return this.eventManager.trigger(eventName, ev,ev=>{
+                ev.mapElement = this
+            })
         }
         // 如果是layer节点，先看子节点有没有触发事件
         if(this.type === 'layer'){
@@ -168,14 +170,13 @@ export abstract class MapElement {
                     triggerFlag = true
                     return false
                 }
-            })
+            },true)
             if(triggerFlag){
                 triggerSelf()
                 return true
             }
         } else if(this.contain(ev.pos,{x:ev.offsetX, y:ev.offsetY})){
-            triggerSelf()
-            return true
+            return triggerSelf()
         }
         return false
         

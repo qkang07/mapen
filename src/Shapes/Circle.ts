@@ -13,14 +13,15 @@ export class Circle extends MapElement {
         this.style = Object.assign({},this.style, style)
         // this.setStyle(style)
     }
-    async render(rctx:IRenderContext) :Promise<ImageBitmap|void> {
+    async customRender(rctx:IRenderContext, renderStyle:IShapeStyle)  {
         const {ctx} = rctx
-        let style = this.style
 
-        ctx.fillStyle = style.fillColor
-        ctx.strokeStyle = style.strokeColor
-        ctx.lineWidth = style.strokeWidth
-     
+        ctx.fillStyle = renderStyle.fillColor
+        ctx.strokeStyle = renderStyle.strokeColor
+        ctx.lineWidth = renderStyle.strokeWidth
+        ctx.globalAlpha = renderStyle.opacity || 1
+
+       
         ctx.beginPath()
         
         // let center = this.map.lngLatToContainer(new AMap.LngLat(shape.center[0], shape.center[1]))
@@ -48,7 +49,6 @@ export class Circle extends MapElement {
         ctx.closePath()
         ctx.stroke()
         ctx.fill()
-        return super.render(rctx)
     }
     contain(pos:LngLat) {
         let [x,y ]= pos

@@ -1,6 +1,8 @@
 import {IRenderContext, IShapeStyle, IPromiseCallback, LngLat, EventType, Pixel  } from '../index.d'
 import { MapElement } from './MapElement';
 import { MapEvent } from './Models';
+import { AsyncQueue } from './Utils/asyncQueue';
+import { EventManager } from './Utils/eventManager';
 
 const AMap:any = (window as any).AMap
 export class MapView extends MapElement{
@@ -13,6 +15,8 @@ export class MapView extends MapElement{
     }
     map: AMap.Map
     ready: -1|0|1 = 0
+
+    private readyQueue = new AsyncQueue()
     readyPromise: IPromiseCallback = null
 
     zoomLevel?:number
@@ -28,6 +32,8 @@ export class MapView extends MapElement{
 
     // 当发生交互事件时，置为true，之后触发一次渲染，并在渲染时触发事件处理
     canvasEvent: MouseEvent = null
+
+    eventEmptyManager:EventManager<MapEvent> = new EventManager()
 
     // 事件相关
     mouseDown: boolean = false
@@ -170,9 +176,18 @@ export class MapView extends MapElement{
               
                         const mapEvent = MapEvent.create(event, lnglat)
                         
+                        let flag = false
                         this.eachChildren(ele=>{
-                            ele.trigger(ename,mapEvent)
-                        })
+                            
+                            if(ele.trigger(ename,mapEvent)){
+                               
+                                flag = true
+                                return false
+                            }
+                        },true)
+                        if(!flag ){
+                            this.eventEmptyManager.trigger(ename, mapEvent)
+                        }
                             
                        
                     })
@@ -188,6 +203,7 @@ export class MapView extends MapElement{
                 this.customCanvasLayer = layer
 
                 this.ready = 1
+                this.readyQueue.ready()
                 resolve()
             });
         })
@@ -204,6 +220,13 @@ export class MapView extends MapElement{
         })
 
     }
+
+    setCity(city:any){
+        this.readyQueue.call(()=>{
+            this.map.setCity(city,null)
+        })
+    }
+
     contain(pos:LngLat){
         return false
     }
@@ -220,7 +243,7 @@ export class MapView extends MapElement{
         return [lng,lat]
     
     }
-
+   
     lnglatToPixel(lnglat: LngLat):Pixel {
 
         let [sw, ne] = this.bounds

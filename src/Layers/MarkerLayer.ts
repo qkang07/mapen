@@ -1,7 +1,8 @@
-import { Marker } from '@/Shapes/Marker';
-import { distance } from '@/Utils';
-import { IRenderContext, IShapeStyle, Pixel } from 'index';
+import { Marker } from '../Shapes/Marker';
+import { distance } from '../Utils';
+import { IRenderContext, IShapeStyle, Pixel } from '../../index';
 import { Layer } from '../Layer';
+import { MapElement } from '../MapElement';
 
 
 class GroupMarker extends Marker {
@@ -21,42 +22,42 @@ class GroupMarker extends Marker {
     
 
     constructor(marker:Marker){
-        super(marker.location, marker.style,marker.image)
+        super(marker.location, marker.style)
         this.pixel = marker.pixel
+        this.type = 'groupmarker'
 
     }
 
-    async render(rctx:IRenderContext):Promise<ImageBitmap|void> {
+    async customRender(rctx:IRenderContext, renderStyle:IShapeStyle) {
         
         let ctx = rctx.ctx
+        ctx.globalAlpha = renderStyle.opacity || 1
       
-        if (this.style.opacity) {
-            ctx.globalAlpha = this.style.opacity
-        }
+       
         let pixel:Pixel = this.pixel
       
-        if(this.image){
-            let height = this.image.height || this.image.imgData.height as number
-            let width = this.image.width || this.image.imgData.width as number
-            ctx.drawImage(this.image.imgData, pixel.x - (width / 2) + this.offset.x , pixel.y - (height / 2),width + this.offset.y , height )
+        if(renderStyle.fillImage){
+            let height = renderStyle.fillImage.height || renderStyle.fillImage.imgData.height as number
+            let width = renderStyle.fillImage.width || renderStyle.fillImage.imgData.width as number
+            // console.log(renderStyle.fillImage)
+            ctx.drawImage(renderStyle.fillImage.imgData, pixel.x - (width / 2) + this.offset.x , pixel.y - (height / 2), width , height )
         } 
 
         let num = this.markers.length.toString()
-       
-        ctx.font = `${this.textStyle.fontSize}px`
+        // console.log(num, 'group num')
+        ctx.font = `${this.textStyle.fontSize}px Arial`
+        // console.log(ctx.font)
+
         ctx.fillStyle = this.textStyle.color
         let textMeasure = ctx.measureText(num)
-        textMeasure.width
-        ctx.fillText(num,pixel.x - textMeasure.width /2 + this.offset.x, pixel.y - this.textStyle.fontSize / 2 + this.offset.y)
-
-        // return super.render(rctx)
-        return null
+        ctx.fillText(num,pixel.x - textMeasure.width /2 + this.offset.x + this.numOffset.x , pixel.y  + this.offset.y + this.numOffset.y)
 
     }
 }
 
 export class MarkerLayer extends Layer {
     protected groupedMarkers:GroupMarker[] = []
+    protected originMarkers:Marker[] = []
 
     groupThreshold:number = 0
     
@@ -64,14 +65,30 @@ export class MarkerLayer extends Layer {
 
     beforeRender:(gm:GroupMarker)=>any
 
+    eachChildren(cb:(item:MapElement) => boolean|void){
+        for(let m of this.groupedMarkers){
+            let flag = cb(m)
+            if(flag === false){
+                break
+            }
+        }
+        for(let m of this.originMarkers){
+            let flag = cb(m)
+            if(flag === false){
+                break
+            }
+        }
+    }
+
+
     async render(rctx?: IRenderContext ) {
         let gmarkers:GroupMarker[] = []
         let markers: Marker[] = []
-        this.eachChildren((ele:Marker)=>{
+        super.eachChildren((ele:Marker)=>{
             let minDist = Number.MAX_VALUE
             let nearMarker: Marker = null
             ele.pixel = this.view.lnglatToPixel(ele.location)
-
+            ele.visible = true
             const checkMerge = (m:Marker) => {
                 let gm = m as GroupMarker
                 if(this.canMerge){
@@ -95,9 +112,9 @@ export class MarkerLayer extends Layer {
 
             gmarkers.forEach(checkMerge)
             markers.forEach(checkMerge)
-            if(minDist < this.groupThreshold && nearMarker){
+            if( minDist < this.groupThreshold && nearMarker){
                 let gm:GroupMarker = nearMarker as GroupMarker
-                gm.setView(this.view)
+                gm.view = this.view
                 gm.parent = this
                 if(gm.markers){
                     gm.markers.push(ele)
@@ -106,31 +123,36 @@ export class MarkerLayer extends Layer {
                     gm = new GroupMarker(ele)
                     gm.markers.push(ele)
                     gm.markers.push(nearMarker)
+
+                    gm.on('click',()=>{
+                        let map = this.view.map
+                        let zoom = map.getZoom()
+                        map.setZoomAndCenter(zoom +1, gm.location)
+                    })
+
                     nearMarker.visible = false
                     ele.visible = false
-                    markers.splice(markers.indexOf(nearMarker))
+                    markers.splice(markers.indexOf(nearMarker),1)
                     gmarkers.push(gm)
                 }
             } else {
                 markers.push(ele)
             }
 
-
-            // ele.render(rctx)
         })
-
+        this.groupedMarkers = gmarkers
+        this.originMarkers = markers
+        markers.forEach(m=>{
+            m.render(rctx)
+        })
         gmarkers.forEach(m=>{
             if(this.beforeRender){
                 this.beforeRender(m)
             }
-            m.render(rctx)
-        })
-        markers.forEach(m=>{
+            // console.log(m)
             m.render(rctx)
         })
 
-
-        return super.render(rctx)
     }
     addChildren(el:Marker){
         if(el instanceof Marker){

@@ -3,6 +3,7 @@ export declare interface IShapeStyle {
     strokeWidth?: number // 线条宽度
     strokeColor?: string // 线条颜色
     opacity?: number
+    fillImage?:IFillImage
     [other: string]: any
 }
 
@@ -71,7 +72,7 @@ export declare class MapElement {
     render(rctx?:IRenderContext): Promise<ImageBitmap|void>
     contain(pos:LngLat):boolean
     addChildren(el:MapElement)
-    clear()
+    clear(repaint?:boolean)
     setZIndex(zIndex:number)
     getZIndex()
     eachChildren(cb:(item:MapElement)=>boolean|void)
@@ -112,9 +113,8 @@ export declare class PolyLine extends MapElement {
 }
 
 export declare class Marker extends MapElement {
-    constructor(location: LngLat, style?: IShapeStyle, image?:IFillImage)
+    constructor(location: LngLat, style?: IShapeStyle)
     position:LngLat
-    image:IFillImage
     scale?:(zoom:number)=>number
 }
 

@@ -14,14 +14,13 @@ export class Line extends MapElement {
         // this.setStyle(style)
     }
 
-    async render(rctx:IRenderContext):Promise<ImageBitmap|void>{
+    async customRender(rctx:IRenderContext, renderStyle:IShapeStyle) {
         let ctx = rctx.ctx
-        ctx.fillStyle = this.style.fillColor
-        ctx.strokeStyle = this.style.strokeColor
-        ctx.lineWidth = this.style.strokeWidth
-        if (this.style.opacity) {
-            ctx.globalAlpha = this.style.opacity
-        }
+        ctx.fillStyle = renderStyle.fillColor
+        ctx.strokeStyle = renderStyle.strokeColor
+        ctx.lineWidth = renderStyle.strokeWidth
+        ctx.globalAlpha = renderStyle.opacity || 1
+       
         ctx.beginPath()
 
         for (let i = 0; i < this.path.length; i++){
@@ -33,7 +32,6 @@ export class Line extends MapElement {
             
         }
         ctx.stroke()
-        return super.render(rctx)
 
     }
     contain(pos:LngLat){

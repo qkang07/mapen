@@ -23,15 +23,13 @@ export class Polygon extends MapElement  {
         this.style = Object.assign({}, this.style, style)
         // this.setStyle(style)
     }
-    async render(rctx:IRenderContext):Promise<ImageBitmap|void>{
+    async customRender(rctx:IRenderContext, renderStyle:IShapeStyle) {
         let ctx = rctx.ctx
-        ctx.fillStyle = this.style.fillColor
-        ctx.strokeStyle = this.style.strokeColor
-        ctx.lineWidth = this.style.strokeWidth
+        ctx.fillStyle = renderStyle.fillColor
+        ctx.strokeStyle = renderStyle.strokeColor
+        ctx.lineWidth = renderStyle.strokeWidth
         
-        if (this.style.opacity) {
-            ctx.globalAlpha = this.style.opacity
-        }
+        ctx.globalAlpha = renderStyle.opacity || 1
         ctx.beginPath()
 
         for (let i = 0; i < this.path.length; i++){
@@ -44,7 +42,6 @@ export class Polygon extends MapElement  {
         ctx.closePath()
         ctx.fill()
         ctx.stroke()
-        return super.render(rctx)
     }
     contain(pos:LngLat) {
         // console.log(pos, this.path)
