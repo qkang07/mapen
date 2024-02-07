@@ -1,63 +1,42 @@
-import { LngLat, IRenderContext, Bounds, IShapeStyle } from "../../index";
+import { IRenderContext, Bounds, IShapeStyle, Pixel } from '../types';
 import { mapDistance } from '../Utils';
-import { MapElement } from '../MapElement';
+import { MapenElement } from '../Element';
 
-export class Circle extends MapElement {
-    center: LngLat
-    radius: number
-    constructor(center: LngLat, radius: number, style?: IShapeStyle) {
-        super()
-        this.type='circle'
-        this.center = center
-        this.radius = radius
-        this.style = Object.assign({},this.style, style)
-        // this.setStyle(style)
-    }
-    async customRender(rctx:IRenderContext, renderStyle:IShapeStyle)  {
-        const {ctx} = rctx
+export class Circle extends MapenElement {
+  center: Pixel;
+  radius: number;
+  constructor(center: Pixel, radius: number, style?: IShapeStyle) {
+    super();
+    this.type = 'circle';
+    this.center = center;
+    this.radius = radius;
+    this.style = Object.assign({}, this.style, style);
+    // this.setStyle(style)
+  }
+  async customRender(rctx: IRenderContext, renderStyle: IShapeStyle) {
+    const { ctx } = rctx;
 
-        ctx.fillStyle = renderStyle.fillColor
-        ctx.strokeStyle = renderStyle.strokeColor
-        ctx.lineWidth = renderStyle.strokeWidth
-        ctx.globalAlpha = renderStyle.opacity || 1
+    ctx.fillStyle = renderStyle.fillColor;
+    ctx.strokeStyle = renderStyle.strokeColor;
+    ctx.lineWidth = renderStyle.strokeWidth;
+    ctx.globalAlpha = renderStyle.opacity || 1;
 
-       
-        ctx.beginPath()
-        
-        // let center = this.map.lngLatToContainer(new AMap.LngLat(shape.center[0], shape.center[1]))
-        let centerPixel = this.view.lnglatToPixel(this.center)
-       
-        // 计算一个比例，将实际距离转换为页面距离。由于纬度是均匀的，使用纬度
-        let loc1 = this.center
-        let p1 = centerPixel
-        let loc2:LngLat = this.center.map(v => v) as LngLat
-        if (loc2[1] >= 89) {
-            loc2[1] -= 1
-        } else {
-            loc2[1] +=1
-        }
-        
-        let p2 = this.view.lnglatToPixel(loc2)
-        let locDistance = mapDistance(loc1,loc2)
-        let pDistance = Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2))
-        let ratio = pDistance / locDistance
+    ctx.beginPath();
 
-        let r = this.radius * ratio
-      
-        ctx.arc(centerPixel.x, centerPixel.y, r, 0, 2 * Math.PI)
+    ctx.arc(this.center[0], this.center[1], this.radius, 0, 2 * Math.PI);
 
-        ctx.closePath()
-        ctx.stroke()
-        ctx.fill()
-    }
-    contain(pos:LngLat) {
-        let [x,y ]= pos
-        return mapDistance(pos, this.center) < this.radius
-    }
-    protected makeBounds():Bounds{
-        return [
-            [this.center[0]-this.radius, this.center[1]-this.radius],
-            [this.center[0]+this.radius, this.center[1]+this.radius]
-        ]
-    }
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fill();
+  }
+  contain(pos: Pixel) {
+    let [x, y] = pos;
+    return mapDistance(pos, this.center) < this.radius;
+  }
+  protected makeBounds(): Bounds {
+    return [
+      [this.center[0] - this.radius, this.center[1] - this.radius],
+      [this.center[0] + this.radius, this.center[1] + this.radius],
+    ];
+  }
 }

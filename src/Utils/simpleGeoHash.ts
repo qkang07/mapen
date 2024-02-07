@@ -1,4 +1,4 @@
-import { Bounds, ITile, LngLat } from '../../index'
+import { Bounds, ITile, Pixel } from '../types'
 
 export const resSpans = []
 let rad = 180
@@ -22,7 +22,7 @@ function createTile(res,x,y):ITile{
     }
 }
 
-export function findTile(pos:LngLat, res:number):ITile{
+export function findTile(pos:Pixel, res:number):ITile{
     let step = resSpans[res]
     let x = Math.floor(pos[0] / step)
     let y = Math.floor(pos[1]/step)

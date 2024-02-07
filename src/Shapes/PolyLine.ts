@@ -1,12 +1,10 @@
-import { LngLat, IShapeStyle, IRenderContext, Bounds } from "../../index";
-import { MapElement } from '../MapElement';
+import { IShapeStyle, IRenderContext, Bounds, Pixel } from "../types";
+import { MapenElement } from '../Element';
 import { makePolyBounds } from '../Utils';
-export class Line extends MapElement {
-    path: LngLat[] = []
-    containerPath: LngLat[] = []
-    pixelPath: LngLat[] = []
+export class Line extends MapenElement {
+    path: Pixel[] = []
 
-    constructor(path: LngLat[], style?: IShapeStyle) {
+    constructor(path: Pixel[], style?: IShapeStyle) {
         super()
         this.path = path
         this.type = 'line'
@@ -25,16 +23,12 @@ export class Line extends MapElement {
 
         for (let i = 0; i < this.path.length; i++){
             let p = this.path[i]
-            let pixel = this.view.lnglatToPixel(p)
-            let screenPos: LngLat = [pixel.x, pixel.y]
-            this.pixelPath.push(screenPos)
-            ctx.lineTo(pixel.x,pixel.y)
-            
+            ctx.lineTo(p[0],p[1])
         }
         ctx.stroke()
 
     }
-    contain(pos:LngLat){
+    contain(pos:Pixel){
         return false
     }
     protected makeBounds():Bounds{

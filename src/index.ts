@@ -1,26 +1,22 @@
-import { MapView } from './MapView'
+import { Mapen } from './Mapen'
 import { Circle } from './Shapes/Circle'
 import { Line } from './Shapes/PolyLine';
 import { Marker } from './Shapes/Marker';
 import { Polygon } from './Shapes/Polygon';
 
 import { colorUtils } from './Utils/color';
-import { MapEvent } from './Models';
+import { MapenEvent } from './Event';
 import { Layer } from './Layer';
 
-import {MarkerLayer} from './Layers/MarkerLayer'
-
 export {
-    MapEvent,
-    MapView,
+    MapenEvent,
+    Mapen,
+
     Circle,
     Line,
     Marker,
     Polygon,
 
     Layer,
-
-    MarkerLayer,
-
     colorUtils,
 }

@@ -1,7 +1,7 @@
-import { MapElement } from '../MapElement';
-import { Bounds, LngLat, Pixel } from '../../index';
+import { MapenElement } from '../Element';
+import { Bounds, Pixel } from '../types';
 
-export const mapDistance = (p1:LngLat,p2:LngLat)=>{
+export const mapDistance = (p1:Pixel,p2:Pixel)=>{
     const Pu = 0.017453292519943295
     const TQ = 6378137
     var d = Pu
@@ -15,7 +15,7 @@ export const mapDistance = (p1:LngLat,p2:LngLat)=>{
 }
 
 export function distance(p1:Pixel, p2:Pixel){
-  return Math.sqrt(Math.pow(p1.x-p2.x,2) + Math.pow(p1.y-p2.y,2))
+  return Math.sqrt(Math.pow(p1[0] -p2[0],2) + Math.pow(p1[1]-p2[1],2))
 }
 
 export const zoomLevels = []
@@ -27,8 +27,8 @@ for(let i =0;i<15;i++){
 }
 
 
-export function makePolyBounds (path:LngLat[]):Bounds{
-  let min:LngLat = [180,90], max:LngLat = [-180,-90]
+export function makePolyBounds (path:Pixel[]):Bounds{
+  let min:Pixel = [180,90], max:Pixel = [-180,-90]
   path.forEach(p=>{
     min[0] = Math.min(p[0], min[0])
     min[1] = Math.min(p[1], min[1])
@@ -38,7 +38,7 @@ export function makePolyBounds (path:LngLat[]):Bounds{
   return [min, max]
 }
 
-export function isShape(ele:MapElement){
+export function isShape(ele:MapenElement){
   return ele.type =='polygon'|| ele.type == 'circle' || ele.type == 'line' || ele.type == 'marker'
 }
 

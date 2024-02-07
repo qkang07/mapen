@@ -1,16 +1,15 @@
 import { distance } from '../Utils';
-import { LngLat, IShapeStyle, IRenderContext, IFillImage, Bounds, Pixel } from "../../index";
-import { MapElement } from '../MapElement';
+import { IShapeStyle, IRenderContext, IFillImage, Bounds, Pixel } from "../types";
+import { MapenElement } from '../Element';
 
-export class Marker extends MapElement {
-    location: LngLat
-    pixel:Pixel = {x:0,y:0}
+export class Marker extends MapenElement {
+    pos: Pixel
     scale?:(zoom:number)=>number
     
-    constructor(location: LngLat, style?: IShapeStyle) {
+    constructor(pos: Pixel, style?: IShapeStyle) {
         super()
         this.type = 'marker'
-        this.location = location
+        this.pos = [...pos]
         this.style = Object.assign({},this.style, style)
     }
     async customRender(rctx:IRenderContext, renderStyle:IShapeStyle) {
@@ -22,27 +21,19 @@ export class Marker extends MapElement {
         ctx.strokeStyle = renderStyle.strokeColor
         ctx.lineWidth = renderStyle.strokeWidth
         ctx.globalAlpha = renderStyle.opacity || 1
-
-    
-        let pixel:Pixel = this.view.lnglatToPixel(this.location)
-        this.pixel = pixel
-        let ratio = 1
-        if(this.scale){
-            ratio = this.scale(this.view.zoomLevel)
-        }
         if(renderStyle.fillImage){
             let height = renderStyle.fillImage.height || renderStyle.fillImage.imgData.height as number
             let width = renderStyle.fillImage.width || renderStyle.fillImage.imgData.width as number
-            ctx.drawImage(renderStyle.fillImage.imgData, pixel.x - (width / 2), pixel.y - (height / 2),width * ratio, height * ratio)
+            ctx.drawImage(renderStyle.fillImage.imgData, this.pos[0] - (width / 2), this.pos[1] - (height / 2),width, height)
         } else {
             ctx.beginPath()
-            ctx.arc(pixel.x, pixel.y, renderStyle.strokeWidth * ratio, 0, 2 * Math.PI)
+            ctx.arc(...this.pos, renderStyle.strokeWidth, 0, 2 * Math.PI)
             ctx.stroke()
         }
 
     }
-    contain(pos:LngLat, pixel:Pixel){
-        return this.visible && distance(pixel, this.pixel) < this.style.strokeWidth
+    contain(pos:Pixel){
+        return this.visible && distance(pos, this.pos) < this.style.strokeWidth
     }
 
     protected makeBounds():Bounds{
